@@ -1,11 +1,14 @@
 package main
 
 import (
+	"time"
+
 	"github.com/Jolek/be-dashboard/config"
 	"github.com/Jolek/be-dashboard/controller"
 	"github.com/Jolek/be-dashboard/middleware"
 	"github.com/Jolek/be-dashboard/repository"
 	"github.com/Jolek/be-dashboard/usecase"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -21,6 +24,18 @@ var (
 func main() {
 
 	r := gin.Default()
+
+	r.Use(cors.New(cors.Config{
+		AllowOrigins:     []string{"*"},
+		AllowMethods:     []string{"*"},
+		AllowHeaders:     []string{"*"},
+		ExposeHeaders:    []string{"*"},
+		AllowCredentials: true,
+		AllowOriginFunc: func(origin string) bool {
+			return origin == "*"
+		},
+		MaxAge: 12 * time.Hour,
+	}))
 
 	authRoutes := r.Group("api/auth")
 	{
